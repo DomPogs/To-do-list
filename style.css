@@ -1,0 +1,546 @@
+:root {
+    --bg-light: #30b2da; /* Main Light Background */
+    --card-light: #a6b3ff; /* Slightly lighter surface for card */
+    --accent-blue: #007BFF; /* Primary Accent Blue */
+    --text-dark: #000000; /* Main Text Color */
+    --completed-green: #28A745; /* Green for completed tasks */
+    --delete-red: #DC3545;
+    
+    /* Refined Neumorphism Shadows */
+    --shadow-dark: rgba(163, 177, 198, 0.4); 
+    --shadow-light: rgba(255, 255, 255, 0.7);
+    --inner-shadow-dark: rgba(163, 177, 198, 0.3);
+    --inner-shadow-light: rgba(255, 255, 255, 0.5);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    /* Set background to a solid color initially */
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0; /* Remove padding from body */
+    margin: 0;
+    background-image: url(background.jpg);
+}
+
+/* New: Background Image Layer */
+.background-image {
+    position: fixed; /* Keep it stationary */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* 1. REPLACE THIS URL with your image path */
+    background-image: url(background.jpg); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* 2. Apply a strong overlay (black transparent layer) and blur */
+    filter: blur(5px) grayscale(50%); /* Subtle blur and desaturation for a soft look */
+    z-index: -1; /* Place it behind everything */
+}
+ p {
+    background-color: aliceblue;
+    margin: 0 10px;
+    padding: 2%;
+    border-radius: 20px;
+ }
+/* New: Wrapper to center content and ensure z-index */
+.app-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px; /* Re-apply padding here */
+    position: relative;
+    z-index: 1; /* Keep content above background */
+    
+    /* Add a semi-transparent white wash over the whole app to soften the image contrast */
+    background-color: rgba(255, 255, 255, 0.4); 
+}
+
+.title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--accent-blue);
+    text-shadow: 1px 1px 2px var(--shadow-dark);
+}
+
+.subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text-dark);
+    opacity: 0.7;
+}
+
+.todo-card {
+    width: 100%;
+    max-width: 650px;
+    padding: 30px;
+    background-color: var(--card-light);
+    border-radius: 30px;
+    /* Core Neumorphic effect */
+    box-shadow: 
+        8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light);
+}
+
+/* Input Group */
+.input-group {
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    overflow: hidden; 
+    /* Inner shadow for the recessed look */
+    box-shadow: 
+        inset 4px 4px 8px var(--inner-shadow-dark),
+        inset -4px -4px 8px var(--inner-shadow-light);
+}
+
+#taskInput {
+    flex-grow: 1;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border: none;
+    background: none;
+    color: var(--text-dark);
+    outline: none;
+}
+
+.add-button {
+    background-color: var(--accent-blue);
+    color: white;
+    width: 60px; /* Fixed width for the plus icon button */
+    padding: 0; 
+    border: none;
+    font-size: 1.5rem; /* Larger icon */
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    /* Raised button look */
+    box-shadow: 
+        3px 3px 6px var(--shadow-dark),
+        -3px -3px 6px var(--shadow-light);
+}
+
+.add-button:hover {
+    background-color: #0069D9;
+}
+
+.add-button:active {
+    /* Press in effect */
+    box-shadow: 
+        inset 2px 2px 5px var(--inner-shadow-dark),
+        inset -2px -2px 5px var(--inner-shadow-light);
+    transform: scale(0.98);
+}
+
+/* --- COMPETITIVE CONTROL LAYOUT --- */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05); 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+}
+
+.filters {
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+    /* Simulates a single recessed unit for the filter group */
+    box-shadow: 
+        inset 2px 2px 4px var(--inner-shadow-dark),
+        inset -2px -2px 4px var(--inner-shadow-light);
+}
+
+.filters button {
+    background-color: var(--card-light);
+    border: none;
+    color: var(--text-dark);
+    padding: 8px 15px;
+    margin: 0; /* Remove internal margins to merge buttons */
+    border-right: 1px solid rgba(0, 0, 0, 0.05); /* Subtle separator */
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.filters button:last-child {
+    border-right: none;
+}
+
+.filters button:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.filters button.active {
+    background-color: var(--accent-blue);
+    color: white;
+    font-weight: 700;
+    box-shadow: none; /* Active button looks flush or pressed-in */
+}
+
+.actions-info {
+    display: flex;
+    align-items: center;
+}
+
+.item-count {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-right: 15px; /* Spacing from clear button */
+}
+
+.clear-btn {
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    opacity: 0.8;
+    cursor: pointer;
+    transition: color 0.2s;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.clear-btn:hover {
+    opacity: 1;
+    color: var(--delete-red);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Task List and Items (Remaining styles from previous version) */
+.task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s;
+}
+
+.task-item:last-child {
+    border-bottom: none;
+}
+
+/* Checkbox Design */
+.checkbox {
+    min-width: 24px;
+    height: 24px;
+    background-color: var(--card-light);
+    border-radius: 50%;
+    margin-right: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    
+    /* Raised circle */
+    box-shadow: 
+        3px 3px 6px var(--shadow-dark),
+        -3px -3px 6px var(--shadow-light);
+}
+
+.checkbox.completed {
+    background-color: var(--completed-green);
+    /* Pressed look when completed */
+    box-shadow: 
+        inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.checkbox i {
+    color: white;
+    font-size: 14px;
+    transform: scale(0.5);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s;
+}
+
+.checkbox.completed i {
+    transform: scale(1);
+    opacity: 0;
+    
+}
+
+.task-text {
+    flex-grow: 1;
+    font-size: 1.1rem;
+    transition: color 0.3s, text-decoration 0.3s;
+    user-select: none;
+}
+
+.task-item.completed .task-text {
+    color: var(--completed-green);
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/* Actions (Edit/Delete) */
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-left: 20px;
+    opacity: 0; 
+    transition: opacity 0.3s;
+}
+
+.task-item:hover .actions {
+    opacity: 1; 
+}
+
+.actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+    padding: 5px 0; 
+}
+
+.edit-btn {
+    color: var(--accent-blue);
+}
+
+.delete-btn {
+    color: var(--delete-red);
+}
+
+.edit-btn:hover {
+    color: #0056B3;
+}
+
+.delete-btn:hover {
+    color: #CC0000;
+}
+
+/* --- Responsive Design (Mobile Optimizations) --- */
+@media (max-width: 600px) {
+    .todo-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .input-group {
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: none;
+    }
+
+    .add-button {
+        width: 100%;
+        padding: 12px 20px;
+        box-shadow: 3px 3px 6px var(--shadow-dark);
+        font-size: 1rem;
+    }
+
+    /* Adjust controls for smaller screens */
+    .controls {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .filters {
+        order: 1;
+        flex-grow: 1;
+        width: 100%;
+        /* The filter group takes full width, maintaining the fused look */
+    }
+
+    .actions-info {
+        order: 2; 
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .item-count {
+        margin-right: 0;
+    }
+
+    /* Stack task content on mobile */
+    .task-item {
+        flex-wrap: wrap;
+    }
+    
+    .task-text {
+        width: 100%;
+        order: 2;
+        margin-left: 39px; 
+        margin-top: 5px;
+    }
+    
+    .checkbox {
+        order: 1;
+        min-width: 22px;
+        height: 22px;
+    }
+
+    .actions {
+        order: 3;
+        width: 100%;
+        justify-content: flex-end;
+        margin: 5px 0 0 0;
+        opacity: 1;
+    }
+}
+
+/* =======================================
+   MODAL STYLING (Neumorphism)
+   ======================================= */
+   .modal {
+    display: none; /* Hidden by default */
+    position: fixed; 
+    z-index: 1000; /* High z-index to cover everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(51, 51, 51, 0.4); /* Dark, soft overlay */
+    backdrop-filter: blur(4px); /* Subtle blur on what's behind it */
+    padding-top: 50px;
+}
+
+.modal-content {
+    background-color: var(--card-light);
+    margin: 5% auto; /* Center the modal vertically and horizontally */
+    padding: 30px;
+    border-radius: 25px;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    
+    /* Neumorphic shadow for the modal card */
+    box-shadow: 
+        10px 10px 20px var(--shadow-dark),
+        -10px -10px 20px var(--shadow-light);
+}
+
+.close-btn {
+    color: var(--text-dark);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: var(--delete-red);
+}
+
+h2 {
+    color: var(--accent-blue);
+    margin-bottom: 20px;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    border: none;
+    background: var(--card-light);
+    color: var(--text-dark);
+    border-radius: 10px;
+    outline: none;
+    
+    /* Pressed/Recessed input field */
+    box-shadow: 
+        inset 3px 3px 6px var(--inner-shadow-dark),
+        inset -3px -3px 6px var(--inner-shadow-light);
+    transition: box-shadow 0.2s;
+}
+
+.modal-input:focus {
+    box-shadow: 
+        inset 1px 1px 2px var(--inner-shadow-dark),
+        inset -1px -1px 2px var(--inner-shadow-light);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.modal-save-btn, .modal-cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    /* Raised button look */
+    box-shadow: 
+        3px 3px 6px var(--shadow-dark),
+        -3px -3px 6px var(--shadow-light);
+}
+
+.modal-save-btn {
+    background-color: var(--accent-blue);
+    color: white;
+}
+
+.modal-save-btn:hover {
+    background-color: #0069D9;
+}
+
+.modal-cancel-btn {
+    background-color: var(--card-light);
+    color: var(--text-dark);
+}
+
+.modal-cancel-btn:hover {
+    background-color: #E8E8E8;
+}
+
+.modal-save-btn:active, .modal-cancel-btn:active {
+    /* Pressed in effect */
+    box-shadow: 
+        inset 2px 2px 5px var(--inner-shadow-dark),
+        inset -2px -2px 5px var(--inner-shadow-light);
+    transform: scale(0.98);
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 480px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+    .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .modal-save-btn, .modal-cancel-btn {
+        width: 100%;
+    }
+}
